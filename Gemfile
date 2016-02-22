@@ -12,6 +12,9 @@ gem 'bootstrap-sass'
 gem 'devise'
 gem 'figaro'
 gem 'haml-rails'
+gem 'telegrammer'
+gem 'rails_admin', '~> 0.8.1'
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller', :platforms=>[:mri_21]
