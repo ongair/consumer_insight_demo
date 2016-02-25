@@ -12,9 +12,13 @@ class TelegramController < ApplicationController
     # response = Response.find_or_create_by! reviewer: reviewer, question: Step.first.questions.first
     current_step = reviewer.current_step
 
-    start_wizard(chat_id, reviewer, params)
-    clear_data(chat_id, reviewer, message, current_step)
-    # responses(chat_id, message, reviewer, current_step)
+    # start_wizard(chat_id, reviewer, params)
+    if message == "/reset" || message == "reset"
+      clear_data(reviewer)
+      Telegram.send_message(chat_id, "Send /start to restart the questionnaire!", true, [])
+    else
+      responses(chat_id, message, reviewer, current_step)
+    end
 
     render json: params
   end
@@ -25,7 +29,14 @@ class TelegramController < ApplicationController
       Progress.create! step: Step.first, reviewer: reviewer
       # clear_data(chat_id, reviewer, message)
     else
-      # if params["message"]["text"] != "/reset" || params["message"]["text"] != "reset"
+      if current_step.is_first_step?
+        if message == "No"
+          clear_data(reviewer)
+          Telegram.send_message(chat_id, "Kindly watch the video. then key in /start to begin!", true, [])
+        end
+      end
+      question = current_step.questions.select{|q| !q.options.blank?}.first
+      if question.options.collect{|o| o.text}.include?(message)
         response = Response.find_or_create_by! reviewer: reviewer, question: current_step.questions.first
         if !current_step.next_step.nil?
           puts ">>>> #{current_step.name}"
@@ -67,12 +78,13 @@ class TelegramController < ApplicationController
           else
             Telegram.send_message(reviewer.telegram_id, question_text, hide_keyboard, options)
           end
-          # a choice is made between male and female and value set to message variable
         else
           response.update(text: message)
           Telegram.send_message(reviewer.telegram_id, "Thanks for your time.", true, [])
         end
-      # end
+      else
+        Telegram.send_message(reviewer.telegram_id, "Please choose among the given options!.", false, [])
+      end
     end
   end
 
@@ -96,18 +108,24 @@ class TelegramController < ApplicationController
     end
   end
 
-  def clear_data chat_id, reviewer, message, current_step
-    if message == "/reset" || message == "reset"
+  def clear_data reviewer
       # give user the power do delete their input
       # delete the user responses
       reviewer.responses.delete_all
       # gets rid of the user progress
       reviewer.progresses.delete_all
 
-      Telegram.send_message(chat_id, "Send /start to restart the questionnaire!", true, [])
-    else
-      responses(chat_id, message, reviewer, current_step)
-    end
+      # Telegram.send_message(chat_id, "Send /start to restart the questionnaire!", true, [])
+    
+
+    # elsif !current_step.nil?
+    #   if !current_step.questions.first.options.all.collect{|o| o.text}.to_a.include? message
+    #     Telegram.send_message(chat_id, "please choose your response among the provided choices!", true, [])
+    #   end
+    # else
+    #   responses(chat_id, message, reviewer, current_step)
+    # end
+
   end
   
 end

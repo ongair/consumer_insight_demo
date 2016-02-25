@@ -4,7 +4,8 @@ class Step < ActiveRecord::Base
 	has_many :questions
 	belongs_to :wizard
 
-	# def next_step
-	# 	Step.where('id > ? ', id).first
-	# end
+	def is_first_step?
+		# find out if this step is the first step
+		id == Step.first.id
+	end
 end

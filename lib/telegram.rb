@@ -6,7 +6,7 @@ class Telegram
 		Telegrammer::Bot.new('185029272:AAF_TieTe5U4_MXnsi5GfmuqCxm9-nqRBOU')
 	end
 
-	def self.reply_markup options = ["Male", "Female"]
+	def self.reply_markup options = []
 		Telegrammer::DataTypes::ReplyKeyboardMarkup.new(	
 			keyboard: options,
 			resize_keyboard: true
