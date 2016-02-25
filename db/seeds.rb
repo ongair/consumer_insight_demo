@@ -9,3 +9,10 @@ user = CreateAdminService.new.call
 puts 'CREATED ADMIN USER: ' << user.email
 # Environment variables (ENV['...']) can be set in the file config/application.yml.
 # See http://railsapps.github.io/rails-environment-variables.html
+
+[4, 5, 6, 7, 8, 9, 10].each do |id|
+	question = Question.find(id)
+	(1..10).to_a.each do |option|
+		Option.create text: option, question: question
+	end
+end

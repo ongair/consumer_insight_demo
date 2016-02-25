@@ -7,7 +7,7 @@ class Telegram
 	end
 
 	def self.reply_markup options = ["Male", "Female"]
-		Telegrammer::DataTypes::ReplyKeyboardMarkup.new(
+		Telegrammer::DataTypes::ReplyKeyboardMarkup.new(	
 			keyboard: options,
 			resize_keyboard: true
 		)
