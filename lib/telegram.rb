@@ -3,7 +3,8 @@ require 'telegrammer'
 class Telegram
 	
 	def self.bot
-		Telegrammer::Bot.new('185029272:AAF_TieTe5U4_MXnsi5GfmuqCxm9-nqRBOU')
+		Telegrammer::Bot.new(ENV['TELEGRAM_TOKEN'])
+		# heroku config:add TELEGRAM_TOKEN=gkqjcgqkgcjkq
 	end
 
 	def self.reply_markup options = []
