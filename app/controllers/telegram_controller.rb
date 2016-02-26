@@ -90,21 +90,11 @@ class TelegramController < ApplicationController
 
   def start_wizard chat_id, reviewer, message
     name = params["message"]["from"]["first_name"]
-    # check_reviewer = Reviewer.find_by! name: name, telegram_id: chat_id
+
     if reviewer.current_step.nil?
-      puts ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>.-------------------------- #{name}"
+      puts ">>>>>>>>>>>>>>>>>>>>>>>>>>>>> -------------------------- #{name}"
       reviewer.update(name: name)
       Telegram.send_message(chat_id, "Welcome #{name} to our quick survey?", true, [])
-    # else
-    #   if message == "/reset" || message == "reset"
-    #     # give user the power do delete their input
-    #     # delete the user responses
-    #     reviewer.responses.delete_all
-    #     # gets rid of the user progress
-    #     reviewer.progresses.delete_all
-
-    #     Telegram.send_message(chat_id, "Send /start to restart the questionnaire!", true, [])
-      # end
     end
   end
 
@@ -114,17 +104,6 @@ class TelegramController < ApplicationController
       reviewer.responses.delete_all
       # gets rid of the user progress
       reviewer.progresses.delete_all
-
-      # Telegram.send_message(chat_id, "Send /start to restart the questionnaire!", true, [])
-    
-
-    # elsif !current_step.nil?
-    #   if !current_step.questions.first.options.all.collect{|o| o.text}.to_a.include? message
-    #     Telegram.send_message(chat_id, "please choose your response among the provided choices!", true, [])
-    #   end
-    # else
-    #   responses(chat_id, message, reviewer, current_step)
-    # end
 
   end
   
