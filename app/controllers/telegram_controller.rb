@@ -8,7 +8,8 @@ class TelegramController < ApplicationController
     puts ">>>>>>>>>>>>>>>>>> #{message}"
 
     # question = Question
-    reviewer = Reviewer.find_or_create_by! telegram_id: chat_id
+    # reviewer = Reviewer.find_or_create_by! telegram_id: chat_id
+    reviewer = Reviewer.find_or_create_by! telegram_id: chat_id.to_s    
     # response = Response.find_or_create_by! reviewer: reviewer, question: Step.first.questions.first
     current_step = reviewer.current_step
 
