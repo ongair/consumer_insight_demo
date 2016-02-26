@@ -4,7 +4,6 @@ class Telegram
 	
 	def self.bot
 		Telegrammer::Bot.new(ENV['TELEGRAM_TOKEN'])
-		# heroku config:add TELEGRAM_TOKEN=gkqjcgqkgcjkq
 	end
 
 	def self.reply_markup options = []
