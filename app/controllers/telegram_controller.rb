@@ -9,12 +9,14 @@ class TelegramController < ApplicationController
 
     # question = Question
     # reviewer = Reviewer.find_or_create_by! telegram_id: chat_id
-    reviewer = Reviewer.find_or_create_by! telegram_id: chat_id.to_s    
+    reviewer = Reviewer.find_or_create_by! telegram_id: chat_id.to_s
     # response = Response.find_or_create_by! reviewer: reviewer, question: Step.first.questions.first
     current_step = reviewer.current_step
 
     # start_wizard(chat_id, reviewer, params)
-    if message == "/reset" || message == "reset"
+    reset = 'reset'
+    reset_ = "/reset"
+    if message == reset || message == reset_ || message == reset.capitalize || message == reset.upcase 
       clear_data(reviewer)
       Telegram.send_message(chat_id, "Send /start to restart the questionnaire!", true, [])
     else
@@ -34,6 +36,7 @@ class TelegramController < ApplicationController
         if message == "No"
           clear_data(reviewer)
           Telegram.send_message(chat_id, "Kindly watch the video. then key in /start to begin!", true, [])
+          return
         end
       end
       question = current_step.questions.select{|q| !q.options.blank?}.first
@@ -102,9 +105,9 @@ class TelegramController < ApplicationController
   def clear_data reviewer
       # give user the power do delete their input
       # delete the user responses
-      reviewer.responses.delete_all
+      reviewer.responses.destroy_all
       # gets rid of the user progress
-      reviewer.progresses.delete_all
+      reviewer.progresses.destroy_all
 
   end
   
