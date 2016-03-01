@@ -32,13 +32,13 @@ class TelegramController < ApplicationController
       Progress.create! step: Step.first, reviewer: reviewer
       # clear_data(chat_id, reviewer, message)
     else
-      if current_step.is_first_step?
-        if message == "No"
-          clear_data(reviewer)
-          Telegram.send_message(chat_id, "Kindly watch the video. then key in /start to begin!", true, [])
-          return
-        end
-      end
+      # if current_step.is_first_step?
+      #   if message == "No"
+      #     clear_data(reviewer)
+      #     Telegram.send_message(chat_id, "Kindly watch the video. then key in /start to begin!", true, [])
+      #     return
+      #   end
+      # end
       question = current_step.questions.select{|q| !q.options.blank?}.first
       if question.options.collect{|o| o.text}.include?(message)
         response = Response.find_or_create_by! reviewer: reviewer, question: current_step.questions.first
