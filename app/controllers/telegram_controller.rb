@@ -13,7 +13,7 @@ class TelegramController < ApplicationController
     # response = Response.find_or_create_by! reviewer: reviewer, question: Step.first.questions.first
     current_step = reviewer.current_step
 
-    # start_wizard(chat_id, reviewer, params)
+    start_wizard(reviewer)
     reset = 'reset'
     reset_ = "/reset"
     if message == reset || message == reset_ || message == reset.capitalize || message == reset.upcase 
@@ -92,13 +92,13 @@ class TelegramController < ApplicationController
     end
   end
 
-  def start_wizard chat_id, reviewer, message
+  def start_wizard reviewer
     name = params["message"]["from"]["first_name"]
 
     if reviewer.current_step.nil?
       puts ">>>>>>>>>>>>>>>>>>>>>>>>>>>>> -------------------------- #{name}"
       reviewer.update(name: name)
-      Telegram.send_message(chat_id, "Welcome #{name} to our quick survey?", true, [])
+      Telegram.send_message(reviewer.telegram_id, "Welcome #{name} to our quick survey? Please watch this video: https://www.youtube.com/watch?v=Uiyyk6fjfro", true, [])
     end
   end
 
