@@ -83,8 +83,19 @@ class TelegramController < ApplicationController
             Telegram.send_message(reviewer.telegram_id, question_text, hide_keyboard, options)
           end
         else
-          response.update(text: message)
-          Telegram.send_message(reviewer.telegram_id, "Thanks for your time.", true, [])
+          # are you sure you satisfied with your response
+          # Telegram.send_message(reviewer.telegram_id, "Are you satisfied with your response? If No you will have to repeat the questionnaire again.", false, [["Yes"], ["No"]])
+          if current_step.next_step.nil?
+            Telegram.send_message(chat_id, Step.last.questions.last.text, false, [['Yes'], ['No']])
+            Progress.create! step: Step.last, reviewer: reviewer
+            if message == "Yes"
+              response.update(text: message)
+              Telegram.send_message(reviewer.telegram_id, "Thanks for your time.", true, [])
+            elsif message == "No"
+              clear_data(reviewer)
+              Telegram.send_message(reviewer.telegram_id, "Type reset to restart.", true, [])
+            end
+          end
         end
       else
         Telegram.send_message(reviewer.telegram_id, "Please choose among the given options!.", false, [])
