@@ -13,7 +13,7 @@ gem 'devise'
 gem 'figaro'
 gem 'haml-rails'
 gem 'telegrammer'
-gem 'rails_admin', '~> 0.8.1'
+gem 'rails_admin', '~> 1.3.0'
 
 group :development do
   gem 'better_errors'
